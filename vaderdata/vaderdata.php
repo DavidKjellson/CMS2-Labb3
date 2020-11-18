@@ -6,3 +6,10 @@
  * Version: 1.0
  * Author: David Kjellson
  **/
+
+function test()
+{
+  echo "Test!";
+}
+
+add_action('woocommerce_single_product_summary', 'test');
