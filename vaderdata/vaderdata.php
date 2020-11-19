@@ -13,7 +13,7 @@ function get_weather_from_API()
   // Contains secret API Key.
   require 'secret.php';
   // Shows weather for Gbg.
-  $url = 'http://api.openweathermap.org/data/2.5/weather?q=Gothenburg,Sweden&APPID=' . $API_KEY;
+  $url = 'https://api.openweathermap.org/data/2.5/weather?q=Gothenburg,Sweden&APPID=' . $API_KEY;
   $response = wp_remote_get($url);
   if (is_array($response)) {
     $header = $response['headers'];
@@ -32,8 +32,9 @@ function show_weather()
     $resp = get_weather_from_API();
   }
   $celsius = $resp->main->temp - 273.15;
-  echo '<div style="display: flex;">Vädret i Göteborg är ' . $celsius . '°.';
-  echo '<img src="http://openweathermap.org/img/wn/' . $resp->weather[0]->icon . '@2x.png"></div>';
+  $round = round($celsius);
+  echo '<div style="display: flex;"><div style="flex-direction: row;">Vädret i Göteborg är ' . $round . '°.';
+  echo '<img src="http://openweathermap.org/img/wn/' . $resp->weather[0]->icon . '@2x.png"></div></div>';
 }
 
 function get_weather_from_db()
@@ -41,6 +42,7 @@ function get_weather_from_db()
   return get_transient('get_weather_from_API');
 }
 
+// Displays weather if chosen with ACF.
 function display_weather()
 {
   $page = get_field('vaderdata');
