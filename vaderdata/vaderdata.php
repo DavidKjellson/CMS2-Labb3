@@ -8,7 +8,7 @@
  **/
 
 // Fetches weather data.
-function get_weather()
+function get_weather_from_API()
 {
   // Contains secret API Key.
   require 'secret.php';
@@ -19,37 +19,40 @@ function get_weather()
     $header = $response['headers'];
     $body = $response['body'];
     $resp = json_decode($body);
-    $celsius = $resp->main->temp - 273.15;
-    echo 'Vädret i Göteborg är: ' . $celsius . '°.';
-    echo '<img src="http://openweathermap.org/img/wn/' . $resp->weather[0]->icon . '@2x.png">';
+    set_transient('get_weather_from_API', $resp, HOUR_IN_SECONDS);
   }
+  return $resp;
 }
 
 // Shows weather data.
 function show_weather()
 {
-  $get_weather = get_transient('get_weather');
-  if ($get_weather) {
-    set_transient('get_weather', 'weather', HOUR_IN_SECONDS);
+  $resp = get_weather_from_db();
+  if (!$resp) {
+    $resp = get_weather_from_API();
   }
+  $celsius = $resp->main->temp - 273.15;
+  echo '<div style="display: flex;">Vädret i Göteborg är ' . $celsius . '°.';
+  echo '<img src="http://openweathermap.org/img/wn/' . $resp->weather[0]->icon . '@2x.png"></div>';
 }
 
-// ACF options
-function acf_options()
+function get_weather_from_db()
 {
-  acf_add_options_page(array(
-    'page_title' => 'Väderdata',
-    'menu_title' => 'Väderdata'
-  ));
+  return get_transient('get_weather_from_API');
 }
 
 function display_weather()
 {
   $page = get_field('vaderdata');
   if ($page === is_product()) {
-    add_action('woocommerce_single_product_summary', 'get_weather');
+    add_action('woocommerce_single_product_summary', 'show_weather');
+  } else if ($page === is_cart()) {
+    add_action('woocommerce_before_cart_contents', 'show_weather');
+  } else if ($page === is_checkout()) {
+    add_action('woocommerce_before_checkout_billing_form', 'show_weather');
+  } else if ($page === is_shop()) {
+    add_action('woocommerce_before_shop_loop', 'show_weather');
   }
 }
 
-add_action('acf/init', 'acf_options');
 add_action('wp_head', 'display_weather');
