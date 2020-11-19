@@ -7,6 +7,7 @@
  * Author: David Kjellson
  **/
 
+// Fetches weather data.
 function get_weather()
 {
   // Contains secret API Key.
@@ -24,12 +25,14 @@ function get_weather()
   }
 }
 
+// Shows weather data.
 function show_weather()
 {
-  get_transient('get_weather');
+  $get_weather = get_transient('get_weather');
+  if ($get_weather) {
+    set_transient('get_weather', 'weather', HOUR_IN_SECONDS);
+  }
 }
-// get_transient('get_weather');
-// set_transient('get_weather', 'ananas', HOUR_IN_SECONDS);
 
 // ACF options
 function acf_options()
@@ -40,5 +43,13 @@ function acf_options()
   ));
 }
 
+function display_weather()
+{
+  $page = get_field('vaderdata');
+  if ($page === is_product()) {
+    add_action('woocommerce_single_product_summary', 'get_weather');
+  }
+}
+
 add_action('acf/init', 'acf_options');
-add_action('woocommerce_single_product_summary', 'get_weather');
+add_action('wp_head', 'display_weather');
