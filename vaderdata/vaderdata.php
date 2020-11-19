@@ -6,9 +6,12 @@
  * Version: 1.0
  * Author: David Kjellson
  **/
+
 function get_weather()
 {
-  include 'secret.php';
+  // Contains secret API Key.
+  require 'secret.php';
+  // Shows weather for Gbg.
   $url = 'http://api.openweathermap.org/data/2.5/weather?q=Gothenburg,Sweden&APPID=' . $API_KEY;
   $response = wp_remote_get($url);
   if (is_array($response)) {
@@ -21,4 +24,21 @@ function get_weather()
   }
 }
 
+function show_weather()
+{
+  get_transient('get_weather');
+}
+// get_transient('get_weather');
+// set_transient('get_weather', 'ananas', HOUR_IN_SECONDS);
+
+// ACF options
+function acf_options()
+{
+  acf_add_options_page(array(
+    'page_title' => 'Väderdata',
+    'menu_title' => 'Väderdata'
+  ));
+}
+
+add_action('acf/init', 'acf_options');
 add_action('woocommerce_single_product_summary', 'get_weather');
