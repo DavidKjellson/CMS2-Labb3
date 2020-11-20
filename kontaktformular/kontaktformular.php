@@ -12,25 +12,24 @@ class Contact
   { ?>
     <div class="container">
       <form action="<?php echo admin_url('admin-ajax.php'); ?>">
+        <label for="namn">Namn</label>
         <input type="text" name="namn">
+        <label for="email">E-post</label>
         <input type="email" name="email">
+        <label for="meddelande">Meddelande</label>
         <input type="text" name="meddelande">
         <input type="submit" value="Skicka">
         <input type="hidden" name="action" value="dk_contactform">
       </form>
     </div>
-<?php }
-
-  function receivemessage()
-  {
-    echo 'Tack för ditt meddelande ' . $_REQUEST['namn'] . '!';
-    die();
+<?php
+    if (isset($_REQUEST['sent'])) {
+      echo 'Tack för ditt meddelande!';
+    }
   }
 
   function insertpost()
   {
-    // Skapa en post  
-    // Namn, innehåll, avsändarens epost
     $post_id = wp_insert_post(
       [
         'post_title' => $_REQUEST['namn'],
@@ -38,14 +37,9 @@ class Contact
         'post_type' => 'meddelanden'
       ]
     );
-    update_post_meta($post_id, 'email', $_REQUEST['email']);
-  }
-  public function __construct()
-  {
-    add_action('wp_ajax_dk_contactform', [$this, 'receivemessage']);
-    add_action('init', [$this, 'messages']);
-    add_action('', [$this, 'insertpost']);
-    add_action('woocommerce_after_main_content', [$this, 'contact']);
+    update_post_meta($post_id, 'e-post', $_REQUEST['email']);
+    wp_redirect($_SERVER['HTTP_REFERER'] . '?sent=true');
+    die();
   }
 
   // Creates post types of messages.
@@ -59,6 +53,13 @@ class Contact
       'public' => true,
       'has_archive' => true
     ]);
+  }
+
+  public function __construct()
+  {
+    add_action('init', [$this, 'messages']);
+    add_action('wp_ajax_dk_contactform', [$this, 'insertpost']);
+    add_action('woocommerce_after_main_content', [$this, 'contact']);
   }
 }
 $contact = new Contact();
