@@ -6,3 +6,47 @@
  * Version: 1.0
  * Author: David Kjellson
  **/
+?>
+<?php function contact()
+{ ?>
+  <div class="container">
+    <form action="/action_page.php">
+      <label for="fname">Namn</label>
+      <input type="text" id="fname" name="firstname" placeholder="Namn">
+
+      <label for="email">E-mail</label>
+      <input type="text" name="email" id="email" placeholder="E-mail">
+
+      <label for="message">Meddelande</label>
+      <textarea id="message" name="message" placeholder="Meddelande" style="height:200px"></textarea>
+
+      <input type="submit" value="Skicka">
+    </form>
+  </div>
+<?php } ?>
+
+<?php add_action('woocommerce_after_main_content', 'contact'); ?>
+
+<style>
+  input[type=text],
+  select,
+  textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+  }
+
+  input[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+</style>
