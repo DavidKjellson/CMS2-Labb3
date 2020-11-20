@@ -10,28 +10,43 @@
 function contact()
 { ?>
   <div class="container">
-    <form action="/action_page.php">
-      <label for="name">Namn</label>
-      <input type="text" id="name" name="firstname" placeholder="Namn" value="<?php isset($_POST['name']); ?>">
-
-      <label for="email">E-mail</label>
-      <input type="text" name="email" id="email" placeholder="E-mail" value="<?php isset($_POST['email']); ?>">
-
-      <label for="message">Meddelande</label>
-      <textarea id="message" name="message" placeholder="Meddelande" value="<?php isset($_POST['message']); ?>" style="height:200px"></textarea>
-
-      <input type="submit" name="submit" value="Skicka">
+    <form action="<?php echo admin_url('admin-ajax.php'); ?>">
+      <input type="text" name="namn">
+      <input type="submit" value="Skicka">
+      <input type="hidden" name="action" value="dk_contactform">
     </form>
   </div>
 <?php }
+
+function receivemessage()
+{
+  echo 'Tack för ditt meddelande ' . $_REQUEST['namn'] . '!';
+  die();
+  // die($_REQUEST['namn']);
+}
+
+function insertpost()
+{
+  // Skapa en post  
+  // Namn, innehåll, avsändarens epost
+  wp_insert_post(
+    [
+      'post_title' => 'Dave',
+      'post_content' => 'Jag är bäst!!',
+      'post_type' => 'meddelanden'
+    ]
+  );
+}
+
+add_action('wp_ajax_dk_contactform', 'receivemessage');
 
 // Creates post types of messages.
 function messages()
 {
   register_post_type('meddelanden', [
     'labels' => [
-      'name' => __('Meddelanden'),
-      'singular_name' => __('Meddelande')
+      'name' => 'Meddelanden',
+      'singular_name' => 'Meddelande'
     ],
     'public' => true,
     'has_archive' => true
@@ -39,6 +54,8 @@ function messages()
 }
 
 add_action('init', 'messages');
+add_action('', 'insertpost');
+// do_action('save_post_{$post->messages}');
 add_action('woocommerce_after_main_content', 'contact'); ?>
 
 <style>
