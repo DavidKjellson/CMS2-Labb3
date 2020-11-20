@@ -6,8 +6,8 @@
  * Version: 1.0
  * Author: David Kjellson
  **/
-?>
-<?php function contact()
+
+function contact()
 { ?>
   <div class="container">
     <form action="/action_page.php">
@@ -23,9 +23,23 @@
       <input type="submit" value="Skicka">
     </form>
   </div>
-<?php } ?>
+<?php }
 
-<?php add_action('woocommerce_after_main_content', 'contact'); ?>
+// Creates post types of messages.
+function messages()
+{
+  register_post_type('meddelanden', [
+    'labels' => [
+      'name' => __('Meddelanden'),
+      'singular_name' => __('Meddelande')
+    ],
+    'public' => true,
+    'has_archive' => true
+  ]);
+}
+
+add_action('init', 'messages');
+add_action('woocommerce_after_main_content', 'contact'); ?>
 
 <style>
   input[type=text],
