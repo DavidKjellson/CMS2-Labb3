@@ -11,16 +11,16 @@ function contact()
 { ?>
   <div class="container">
     <form action="/action_page.php">
-      <label for="fname">Namn</label>
-      <input type="text" id="fname" name="firstname" placeholder="Namn">
+      <label for="name">Namn</label>
+      <input type="text" id="name" name="firstname" placeholder="Namn" value="<?php isset($_POST['name']); ?>">
 
       <label for="email">E-mail</label>
-      <input type="text" name="email" id="email" placeholder="E-mail">
+      <input type="text" name="email" id="email" placeholder="E-mail" value="<?php isset($_POST['email']); ?>">
 
       <label for="message">Meddelande</label>
-      <textarea id="message" name="message" placeholder="Meddelande" style="height:200px"></textarea>
+      <textarea id="message" name="message" placeholder="Meddelande" value="<?php isset($_POST['message']); ?>" style="height:200px"></textarea>
 
-      <input type="submit" value="Skicka">
+      <input type="submit" name="submit" value="Skicka">
     </form>
   </div>
 <?php }
