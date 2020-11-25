@@ -7,11 +7,20 @@
  * Author: David Kjellson
  **/
 
-function is_seven_letters_long($seven)
+class Counter
 {
-  if (strlen($seven) === 7) {
-    return true;
-  } else {
-    return false;
+  function is_seven_letters_long($seven)
+  {
+    if (strlen($seven) === 7) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  public function __construct()
+  {
+    add_action('wp_footer', [$this, 'is_seven_letters_long']);
   }
 }
+
+$counter = new Counter();
