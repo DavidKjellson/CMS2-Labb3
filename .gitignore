@@ -4,5 +4,7 @@ debug-bar/
 debug-bar-console/
 hello.php
 index.php
+kontaktformular/acf.php
+vaderdata/acf.php
 vaderdata/secret.php
 woocommerce/

@@ -7,6 +7,8 @@
  * Author: David Kjellson
  **/
 
+require 'acf.php';
+
 class Weather
 {
   // Fetches weather data.

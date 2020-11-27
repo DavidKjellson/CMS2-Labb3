@@ -6,6 +6,9 @@
  * Version: 1.0
  * Author: David Kjellson
  **/
+
+require 'acf.php';
+
 class Contact
 {
   function contact()
