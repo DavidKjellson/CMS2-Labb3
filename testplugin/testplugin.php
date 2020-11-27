@@ -13,6 +13,9 @@ class TestCounter
   {
     $testcount = new Counter();
     $isworking = $testcount->is_seven_letters_long($strangen_som_ska_testas);
+    $forvantat_string_format = $forvantat_returvarde ? 'True' : 'False';
+    $isworking_string_format = $isworking ? 'True' : 'False';
+    echo "$strangen_som_ska_testas $forvantat_string_format $isworking_string_format:";
     if ($isworking === $forvantat_returvarde) {
       echo '<p style="color: green;">Lyckat test!</p>';
     } else {
@@ -25,14 +28,16 @@ class TestCounter
     $six = '123456';
     $seven = '1234567';
     $nine = '123456789';
-    $this->testfunction($seven, true);
     $this->testfunction($six, false);
-    $this->testfunction($nine, false);
+    $this->testfunction($seven, true);
+    $this->testfunction($nine, true); // Fel!
   }
 
   public function __construct()
   {
-    add_action('init', [$this, 'runtest']);
+    add_action('woocommerce_archive_description', [$this, 'runtest']);
   }
 }
-$test = new TestCounter();
+if (isset($_GET['testrun']) && $_GET['testrun'] === 'yes') {
+  $test = new TestCounter();
+}
